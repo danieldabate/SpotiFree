@@ -120,10 +120,10 @@
 }
 
 - (BOOL)isAnAd {
-    NSInteger currentTrackNumber;
-    currentTrackNumber = self.spotify.currentTrack.trackNumber;
+    NSInteger currentTrackNumber = self.spotify.currentTrack.trackNumber;
+    NSString * currentTrackUrl = self.spotify.currentTrack.spotifyUrl;
     
-    return currentTrackNumber == 0 ? YES : NO;
+    return currentTrackNumber == 0 && [currentTrackUrl hasPrefix:@"spotify:track"];
 }
 
 - (BOOL)isPlaying {
