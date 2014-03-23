@@ -82,6 +82,12 @@
     [self.statusItem setImage:isActive ? [NSImage imageNamed:@"statusBarIconActive"] : [NSImage imageNamed:@"statusBarIconInactive"]];
 }
 
+- (void)silencingAdStateShouldGetUpdated:(BOOL)isSilencingAd {
+    if (!self.statusItem)
+        return;
+    [self.statusItem setImage:isSilencingAd ? [NSImage imageNamed:@"statusBarIconSilencingAd"] : [NSImage imageNamed:@"statusBarIconActive"]];
+}
+
 #pragma mark -
 #pragma mark NSAlertModalDelegate
 - (void) alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {

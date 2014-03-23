@@ -12,6 +12,7 @@
 
 @optional
 - (void)activeStateShouldGetUpdated:(BOOL)isActive;
+- (void)silencingAdStateShouldGetUpdated:(BOOL)isSilencingAd;
 
 @end
 

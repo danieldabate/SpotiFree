@@ -109,6 +109,9 @@
     [self.spotify pause];
     [self.spotify setSoundVolume:0];
     [self.spotify play];
+    
+    if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)])
+        [self.delegate silencingAdStateShouldGetUpdated:YES];
 }
 
 - (void)unmute {
@@ -116,6 +119,9 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self.spotify setSoundVolume:_currentVolume];
+        
+        if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)])
+            [self.delegate silencingAdStateShouldGetUpdated:NO];
     });
 }
 
