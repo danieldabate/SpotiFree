@@ -58,8 +58,11 @@
                 [self.timer invalidate];
             self.timer = TIMER_CHECK_AD;
         } else {
-            if (self.timer)
+            if (self.timer) {
+                [self.timer fire];
+                    
                 [self.timer invalidate];
+            }
         }
         if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)])
             [self.delegate activeStateShouldGetUpdated:self.shouldRun];
@@ -129,7 +132,7 @@
     NSInteger currentTrackNumber = self.spotify.currentTrack.trackNumber;
     NSString * currentTrackUrl = self.spotify.currentTrack.spotifyUrl;
     
-    return currentTrackNumber == 0 && [currentTrackUrl hasPrefix:@"spotify:track"];
+    return currentTrackNumber == 9 && [currentTrackUrl hasPrefix:@"spotify:track"];
 }
 
 - (BOOL)isPlaying {
