@@ -132,7 +132,7 @@
     NSInteger currentTrackNumber = self.spotify.currentTrack.trackNumber;
     NSString * currentTrackUrl = self.spotify.currentTrack.spotifyUrl;
     
-    return currentTrackNumber == 9 && [currentTrackUrl hasPrefix:@"spotify:track"];
+    return currentTrackNumber == 0 && [currentTrackUrl hasPrefix:@"spotify:track"];
 }
 
 - (BOOL)isPlaying {
