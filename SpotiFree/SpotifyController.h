@@ -17,8 +17,7 @@ typedef NS_ENUM(NSInteger, SFSpotifyState) {
 @protocol SpotifyControllerDelegate <NSObject>
 
 @optional
-- (void)activeStateShouldGetUpdated:(BOOL)isActive;
-- (void)silencingAdStateShouldGetUpdated:(BOOL)isSilencingAd;
+- (void)activeStateShouldGetUpdated:(SFSpotifyState)state;
 
 @end
 

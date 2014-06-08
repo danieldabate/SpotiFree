@@ -67,6 +67,10 @@
                 [self.timer invalidate];
             }
         }
+
+        if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)]) {
+            [self.delegate activeStateShouldGetUpdated:(self.shouldRun ? kSFSpotifyStateActive : kSFSpotifyStateInactive)];
+        }
     }
 }
 
@@ -126,9 +130,15 @@
     [self.spotify pause];
     [self.spotify setSoundVolume:0];
     [self.spotify play];
-    
-    if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)])
-        [self.delegate silencingAdStateShouldGetUpdated:YES];
+
+	if (self.appData.shouldShowNotifications) {
+		NSUserNotification *notification = [[NSUserNotification alloc] init];
+		[notification setTitle:@"SpotiFree"];
+		[notification setInformativeText:[NSString stringWithFormat:@"A Spotify Ad was detected! Music will be back in about %ld seconds…", (long)self.spotify.currentTrack.duration]];
+		[notification setSoundName:nil];
+
+		[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+	}
 }
 
 - (void)unmute {
@@ -136,9 +146,6 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self.spotify setSoundVolume:_currentVolume];
-        
-        if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)])
-            [self.delegate silencingAdStateShouldGetUpdated:NO];
     });
 }
 
