@@ -9,6 +9,7 @@
 #import "SpotifyController.h"
 #import "Spotify.h"
 #import "AppData.h"
+#import "AppDelegate.h"
 
 #define SPOTIFY_BUNDLE_IDENTIFIER @"com.spotify.client"
 
@@ -39,6 +40,7 @@
 - (id)init
 {
     self = [super init];
+
     if (self) {
         self.spotify = [SBApplication applicationWithBundleIdentifier:SPOTIFY_BUNDLE_IDENTIFIER];
         self.appData = [AppData sharedData];
@@ -48,6 +50,7 @@
         
         [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(playbackStateChanged) name:@"com.spotify.client.PlaybackStateChanged" object:nil];
     }
+
     return self;
 }
 
@@ -64,8 +67,6 @@
                 [self.timer invalidate];
             }
         }
-        if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)])
-            [self.delegate activeStateShouldGetUpdated:self.shouldRun];
     }
 }
 
@@ -82,8 +83,9 @@
 - (void)startService {
     [self playbackStateChanged];
     
-    if (self.shouldRun)
+    if (self.shouldRun) {
         self.timer = TIMER_CHECK_AD;
+    }
 }
 
 #pragma mark -
@@ -93,15 +95,27 @@
         [self.timer invalidate];
         [self mute];
         self.timer = TIMER_CHECK_MUSIC;
+
+		if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)]) {
+            [self.delegate activeStateShouldGetUpdated:kSFSpotifyStateBlockingAd];
+        }
     }
 }
 
 - (void)checkForMusic {
-    if (![self isAnAd]) {
-        [self.timer invalidate];
-        [self unmute];
-        if (self.shouldRun)
-            self.timer = TIMER_CHECK_AD;
+    if ([self isAnAd]) {
+        return;
+    }
+    
+    [self.timer invalidate];
+    [self unmute];
+
+    if (self.shouldRun) {
+        self.timer = TIMER_CHECK_AD;
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(activeStateShouldGetUpdated:)]) {
+        [self.delegate activeStateShouldGetUpdated:(self.shouldRun ? kSFSpotifyStateActive : kSFSpotifyStateInactive)];
     }
 }
 
